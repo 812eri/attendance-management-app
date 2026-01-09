@@ -1,0 +1,416 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.header__logo img {
+    height: 25px;
+}
+
+.header__nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.header__nav a,
+.header__nav button {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* --- 勤怠一覧画面固有 --- */
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-align: left;
+    /* 左寄せに変更 */
+    border-left: 5px solid #000;
+    /* 黒い縦線 */
+    padding-left: 15px;
+    /* 線と文字の間 */
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 日付ナビゲーション */
+.date-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px 40px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    /* 必要なければ0に */
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #ddd;
+}
+
+/* 前日・翌日リンク */
+.date-nav__link {
+    color: #737373;
+    /* グレー文字 */
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* 矢印との間隔調整 */
+.date-nav__link.prev {
+    margin-right: 20px;
+}
+
+/* 必要に応じて調整 */
+.date-nav__link.next {
+    margin-left: 20px;
+}
+
+/* 必要に応じて調整 */
+
+/* カレンダー入力フォーム周り */
+.date-nav__form {
+    display: inline-block;
+}
+
+.date-nav__label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    /* クリックできる感 */
+    position: relative;
+}
+
+/* 隠し日付入力欄 */
+#date-picker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    /* 完全透明にして見えなくする */
+    cursor: pointer;
+}
+
+/* 日付文字 */
+.date-nav__current {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* カレンダーアイコン */
+.calendar-icon {
+    width: 24px;
+    height: auto;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* --- テーブルデザイン修正 --- */
+.attendance-table {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    color: #737373;
+    font-weight: bold;
+    border-collapse: collapse;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.attendance-table th,
+.attendance-table td {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    font-size: 14px;
+}
+
+.attendance-table th {
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+/* テーブル内の文字色を全体グレーに */
+.attendance-table td {
+    color: #737373;
+}
+
+/* 詳細ボタンだけ黒文字にする */
+.btn-detail {
+    color: #000 !important;
+    /* グレー設定を上書き */
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: none;
+    /* 下線を消すか、残すかはお好みで */
+}
+
+/* =========================================
+   勤怠詳細画面（共通レイアウト用）
+   ※一般ユーザー画面でも使用予定
+   ========================================= */
+
+/* 白い背景のフォームエリア */
+.detail-form-wrapper {
+    background-color: #fff;
+    padding: 20px 60px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    /* 中央寄せ */
+    /* 必要に応じて角丸や影を追加 */
+    /* border-radius: 5px; */
+}
+
+/* フォームの各行（横並びにする） */
+.form-group {
+    display: flex;
+    align-items: center;
+    /* 垂直方向中央 */
+    padding-bottom: 25px;
+    /* 行の下の余白 */
+    margin-bottom: 25px;
+    /* 次の行との間隔 */
+    border-bottom: 3px solid #e0e0e0;
+    /* 薄い下線 */
+}
+
+/* ▼▼ 追加: 下線を消すためのクラス ▼▼ */
+.form-group.no-border .form-content {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    display: block;
+    max-width: 100%;
+}
+
+/* ▼▼ 最後の行（ボタンの直前など）の下線を消す設定 ▼▼ */
+.form-group:last-of-type,
+.form-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* 左側のラベル（名前、日付など） */
+.form-label {
+    width: 200px;
+    /* ラベル幅固定 */
+    font-weight: bold;
+    font-size: 16px;
+    color: #737373;
+    padding-left: 40px;
+    box-sizing: border-box;
+}
+
+/* 右側のコンテンツエリア */
+.form-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 400px;
+    flex-wrap: wrap;
+    padding-left: 50px;
+}
+
+/* テキスト表示部分（名前・日付） */
+.text-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 400px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    padding-left: 70px;
+}
+
+/* ▼▼▼ 日付の「年」と「月日」の間隔を調整 ▼▼▼ */
+.date-part {
+    margin-right: 40px;
+}
+
+/* 最後の要素（月日）の右余白は消す */
+.date-part:last-child {
+    margin-right: 0;
+}
+
+.input-time,
+.input-textarea {
+    font-family: inherit;
+    /* 親要素（bodyなど）のフォントを引き継ぐ */
+    font-weight: bold;
+    /* 文字の太さを合わせる */
+    color: #000;
+    /* 文字色を黒に */
+}
+
+/* 時間入力欄 */
+.input-time {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 120px;
+    /* 幅を固定 */
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* チルダ（〜） */
+.tilde {
+    margin: 0 30px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* 備考欄（テキストエリア） */
+.input-textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    resize: none;
+    /* サイズ変更不可 */
+    font-size: 16px;
+}
+
+/* 修正ボタンエリア */
+.form-footer {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto 0;
+    margin-top: 30px;
+    text-align: right;
+    padding-right: 60px;
+    /* wrapperのpaddingと合わせる */
+    box-sizing: border-box;
+}
+
+.btn-submit {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 40px;
+    /* 横幅広め */
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: opacity 0.3s;
+}
+
+.btn-submit:hover {
+    opacity: 0.8;
+}
+
+.error-message {
+    width: 100%;
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* --- タブメニュー --- */
+.tab-menu {
+    margin-bottom: 30px;
+    border-bottom: 3px solid #ddd;
+    /* 下線 */
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 15px 40px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #737373;
+    outline: none;
+}
+
+/* 選択中のタブ */
+.tab-btn.active {
+    color: #000;
+    border-bottom: 3px solid #000;
+    /* 黒い下線 */
+}
+
+/* --- タブコンテンツ --- */
+.tab-content {
+    display: none;
+    /* 初期状態は非表示（JSで制御） */
+    animation: fadeEffect 0.5s;
+    /* ふわっと表示 */
+}
+
+/* 初期表示用 */
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeEffect {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* 申請一覧テーブル（既存のtableクラスを流用しつつ微調整） */
+.attendance-table td {
+    vertical-align: middle;
+}
+
+/* --- 申請承認画面用 --- */
+
+/* 時間表示（入力欄風の配置にするためのスタイル） */
+.time-text {
+    width: 100px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    /* 必要なら背景色などをつけて入力欄っぽく見せることも可能ですが、今回はテキストのみ */
+    padding: 8px 10px;
+}
+
+/* 承認済みボタン（グレー） */
+.btn-gray {
+    background-color: #5d5d5d !important;
+    /* 暗いグレー */
+    cursor: default;
+    /* クリックできないカーソル */
+    opacity: 1;
+    /* 透明度は下げない */
+}
+
+.btn-gray:hover {
+    opacity: 1;
+    /* ホバーしても変化させない */
+}

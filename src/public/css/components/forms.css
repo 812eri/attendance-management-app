@@ -1,0 +1,42 @@
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    /* 薄いグレー */
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.form-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #000;
+    /* 黒ボタン */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.form-error {
+    color: #ff0000;
+    font-size: 12px;
+    margin-top: 5px;
+}

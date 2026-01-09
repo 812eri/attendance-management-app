@@ -1,0 +1,37 @@
+/* ページ全体 */
+.l-page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ログイン前のヘッダー（黒背景） */
+.header-minimal {
+    background-color: #000;
+    /* 黒背景 */
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-main__logo-img {
+    height: 25px;
+    /* ロゴの高さ調整 */
+    width: auto;
+    display: block;
+}
+
+/* メインコンテンツエリア */
+.l-main-content {
+    flex: 1;
+    padding: 40px 20px;
+}
+
+/* 中央寄せ用修飾クラス */
+.l-main-content--center {
+    display: flex;
+    justify-content: center;
+    /* 上下の余白調整 */
+    padding-top: 60px;
+}

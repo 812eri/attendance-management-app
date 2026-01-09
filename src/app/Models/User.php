@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -17,11 +17,21 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    const ROLE_USER = 1;
+    const ROLE_ADMIN = 2;
+
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role_id',
     ];
+
+    public function isAdmin()
+    {
+        return $this->role_id === self::ROLE_ADMIN;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,4 +51,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function stampCorrectionRequests()
+    {
+        return $this->hasMany(StampCorrectionRequest::class);
+    }
 }
