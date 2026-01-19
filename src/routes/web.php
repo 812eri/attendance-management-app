@@ -26,9 +26,14 @@ use App\Http\Controllers\Admin\StampCorrectionRequestController as AdminStampCor
 // 必要に応じてカスタマイズするため、Fortify設定後に確認します。
 
 // ▼ 勤怠関連
-Route::group(['prefix' => 'attendance'], function () {
+Route::group(['prefix' => 'attendance', 'middleware' => ['verified']], function () {
     // PG03 勤怠登録画面（打刻画面）
     Route::get('/', [AttendanceController::class, 'index'])->name('attendance.index');
+
+    Route::post('/clockin', [AttendanceController::class, 'clockIn'])->name('attendance.clockIn');
+    Route::post('/clockout', [AttendanceController::class, 'clockOut'])->name('attendance.clockOut');
+    Route::post('/break/start', [AttendanceController::class, 'breakStart'])->name('attendance.breakStart');
+    Route::post('/break/end', [AttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
 
     // PG04 勤怠一覧画面
     Route::get('/list', [AttendanceController::class, 'list'])->name('attendance.list');
@@ -36,6 +41,14 @@ Route::group(['prefix' => 'attendance'], function () {
     // PG05 勤怠詳細画面
     Route::get('/detail/{id}', [AttendanceController::class, 'show'])->name('attendance.show');
 });
+
+Route::post('/logout', function (\Illuminate\Http\Request $request) {
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    
+    return redirect('/login');
+})->name('logout');
 
 
 // ▼ 修正申請関連（一般・管理者 共通URL）
@@ -47,7 +60,7 @@ Route::group(['prefix' => 'stamp_correction_request'], function () {
     Route::get('/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.index');
 
     // 申請送信処理（一般ユーザー用アクション）
-    Route::post('/create', [StampCorrectionRequestController::class, 'store'])->name('stamp_correction_request.store');
+    Route::post('/store', [StampCorrectionRequestController::class, 'store'])->name('stamp_correction_request.store');
 });
 
 

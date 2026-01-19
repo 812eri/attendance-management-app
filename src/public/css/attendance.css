@@ -1,0 +1,80 @@
+/* 全体のレイアウト */
+.attendance-container {
+    text-align: center;
+    padding-top: 80px;
+    width: 100%;
+    background-color: #f5f5f5;
+    /* 背景色（薄いグレー） */
+    min-height: 80vh;
+}
+
+/* ステータスバッジ（勤務外、出勤中など） */
+.attendance-status {
+    display: inline-block;
+    background-color: #c8c8c8;
+    color: #696969;
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* 日付表示 */
+.attendance-date {
+    font-size: 40px;
+    margin-bottom: 30px;
+    letter-spacing: 0.05em;
+}
+
+/* 時計表示 */
+.attendance-time {
+    font-size: 80px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    font-family: sans-serif;
+    line-height: 1;
+}
+
+/* ボタンエリア */
+.attendance-actions {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    font-weight: bold;
+    font-size: 20px;
+    /* ボタン同士の間隔 */
+}
+
+/* 打刻ボタン共通スタイル */
+.attendance-btn {
+    background-color: #000;
+    /* 黒背景 */
+    color: #fff;
+    /* 白文字 */
+    border: none;
+    width: 200px;
+    padding: 12px 0;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.3s;
+}
+
+.attendance-btn:hover {
+    opacity: 0.8;
+}
+
+.attendance-btn.is-white {
+    background-color: #fff;
+    color: #000;
+}
+
+/* 非活性ボタン（押せない状態用）が必要な場合 */
+.attendance-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
