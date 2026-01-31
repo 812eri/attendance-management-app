@@ -12,15 +12,15 @@ use Illuminate\Support\Facades\DB;
 class StampCorrectionRequestController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $pendingRequests = StampCorrectionRequest::where('status', 'pending')
-            ->with(['user', 'attendance'])->get();
+        $status = $request->input('tab', 'pending');
 
-        $approvedRequests = StampCorrectionRequest::where('status', 'approved')
-            ->with(['user', 'attendance'])->get();
+        $requests = StampCorrectionRequest::where('status', $status)
+            ->with(['user', 'attendance'])
+            ->get();
 
-        return view('admin.correction_request.index', compact('pendingRequests', 'approvedRequests'));
+        return view('admin.correction_request.index', compact('requests', 'status'));
     }
 
     public function approveView($attendance_correct_request_id)
@@ -37,25 +37,39 @@ class StampCorrectionRequestController extends Controller
     public function approve($attendance_correct_request_id)
     {
         DB::transaction(function () use ($attendance_correct_request_id) {
-
             $request = StampCorrectionRequest::findOrFail($attendance_correct_request_id);
-
             $attendance = Attendance::findOrFail($request->attendance_id);
 
-            $baseDate = $attendance->date;
+            $baseDate = \Carbon\Carbon::parse($attendance->date)->format('Y-m-d');
 
-            $attendance->start_time = $request->new_start_time ? $baseDate . ' ' . $request->new_start_time : null;
-            $attendance->end_time = $request->new_end_time ? $baseDate . ' ' . $request->new_end_time : null;
+            $newStartTime = $request->new_start_time 
+                ? \Carbon\Carbon::parse($request->new_start_time)->format('H:i:s') 
+                : null;
+
+            $newEndTime = $request->new_end_time 
+                ? \Carbon\Carbon::parse($request->new_end_time)->format('H:i:s') 
+                : null;
+
+            $newBreakStart = $request->new_break_start 
+                ? \Carbon\Carbon::parse($request->new_break_start)->format('H:i:s') 
+                : null;
+
+            $newBreakEnd = $request->new_break_end 
+                ? \Carbon\Carbon::parse($request->new_break_end)->format('H:i:s') 
+                : null;
+
+            $attendance->start_time = $newStartTime ? "{$baseDate} {$newStartTime}" : null;
+            $attendance->end_time = $newEndTime ? "{$baseDate} {$newEndTime}" : null;
             $attendance->remarks = $request->new_remarks;
             $attendance->save();
 
             $attendance->rests()->delete();
 
-            if ($request->new_break_start && $request->new_break_end) {
-                Rest::create([
+            if ($newBreakStart && $newBreakEnd) {
+                \App\Models\Rest::create([
                     'attendance_id' => $attendance->id,
-                    'start_time' => $baseDate . ' ' . $request->new_break_start,
-                    'end_time' => $baseDate . ' ' .$request->new_break_end,
+                    'start_time' => "{$baseDate} {$newBreakStart}",
+                    'end_time' => "{$baseDate} {$newBreakEnd}",
                 ]);
             }
 

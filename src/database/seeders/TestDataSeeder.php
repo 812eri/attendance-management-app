@@ -27,48 +27,49 @@ class TestDataSeeder extends Seeder
             ['name' => '中西 教夫', 'email' => 'nakanishi@example.com'],
         ];
 
-        $targetDate = Carbon::today();
-
         foreach ($usersData as $userData) {
-            // --- ユーザー作成 ---
-            // emailが同じ人がいなければ作成、いればその人を取得
             $user = User::firstOrCreate(
                 ['email' => $userData['email']],
                 [
                     'name' => $userData['name'],
                     'password' => Hash::make('password123'),
-                    'role_id' => User::ROLE_USER, // ★ここを追加（一般ユーザーとして作成）
+                    'role_id' => User::ROLE_USER,
                     'email_verified_at' => now(),
                 ]
             );
 
-            // --- 勤怠データ作成（既にその日のデータがあれば作らない） ---
-            // 9:00〜18:00
-            $startTime = $targetDate->copy()->setTime(9, 0, 0);
-            $endTime   = $targetDate->copy()->setTime(18, 0, 0);
+            for ($i = 0; $i < 30; $i++) {
+                $targetDate = Carbon::today()->subDays($i);
+                
+                if (rand(1, 100) <= 30) {
+                    continue;
+                }
 
-            $attendance = Attendance::firstOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'date'    => $targetDate->format('Y-m-d')
-                ],
-                [
-                    'start_time' => $startTime,
-                    'end_time'   => $endTime,
-                ]
-            );
+                $startTime = $targetDate->copy()->setTime(9, 0, 0);
+                $endTime   = $targetDate->copy()->setTime(18, 0, 0);
 
-            // --- 休憩データ作成（勤怠データが新規作成された場合のみ追加など制御しても良いが、今回は簡易的に作成） ---
-            // 休憩データがまだなければ作成
-            if ($attendance->rests()->doesntExist()) {
-                $restStart = $targetDate->copy()->setTime(12, 0, 0);
-                $restEnd   = $targetDate->copy()->setTime(13, 0, 0);
+                $attendance = Attendance::firstOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'date'    => $targetDate->format('Y-m-d')
+                    ],
+                    [
+                        'start_time' => $startTime,
+                        'end_time'   => $endTime,
+                        'remarks'    => '自動生成データ',
+                    ]
+                );
 
-                Rest::create([
-                    'attendance_id' => $attendance->id,
-                    'start_time'    => $restStart,
-                    'end_time'      => $restEnd,
-                ]);
+                if ($attendance->wasRecentlyCreated) {
+                    $restStart = $targetDate->copy()->setTime(12, 0, 0);
+                    $restEnd   = $targetDate->copy()->setTime(13, 0, 0);
+
+                    Rest::create([
+                        'attendance_id' => $attendance->id,
+                        'start_time'    => $restStart,
+                        'end_time'      => $restEnd,
+                    ]);
+                }
             }
         }
     }

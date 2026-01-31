@@ -11,11 +11,17 @@
     <h1 class="page-title">申請一覧</h1>
 
     <div class="tab-menu">
-        <button class="tab-btn active" onclick="openTab(event, 'pending')">承認待ち</button>
-        <button class="tab-btn" onclick="openTab(event, 'approved')">承認済み</button>
+        <a href="{{ route('admin.stamp_correction_request.index', ['tab' => 'pending']) }}" 
+           class="tab-btn {{ $status === 'pending' ? 'active' : '' }}">
+            承認待ち
+        </a>
+        <a href="{{ route('admin.stamp_correction_request.index', ['tab' => 'approved']) }}" 
+           class="tab-btn {{ $status === 'approved' ? 'active' : '' }}">
+            承認済み
+        </a>
     </div>
 
-    <div id="pending" class="tab-content active">
+    <div class="tab-content active">
         <table class="attendance-table">
             <thead>
                 <tr>
@@ -28,52 +34,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($pendingRequests as $request)
+                @foreach($requests as $request)
                 <tr>
-                    <td>承認待ち</td>
+                    <td>
+                        {{ $request->status === 'pending' ? '承認待ち' : '承認済み' }}
+                    </td>
                     <td>{{ $request->user->name }}</td>
-                    <td>@if($request->attendance)
+                    <td>
+                        @if($request->attendance)
                             {{ \Carbon\Carbon::parse($request->attendance->date)->format('Y/m/d') }}
                         @else
                             <span style="color:red;">データなし</span>
                         @endif
                     </td>
                     <td>{{ $request->new_remarks }}</td>
-                    <td>{{ $request->created_at ? $request->created_at->format('Y/m/d') : '-' }}</td>
-                    <td>
-                        <a href="{{ route('admin.stamp_correction_request.approve', $request->id) }}" class="btn-detail">詳細</a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-
-    <div id="approved" class="tab-content">
-        <table class="attendance-table">
-            <thead>
-                <tr>
-                    <th>状態</th>
-                    <th>名前</th>
-                    <th>対象日時</th>
-                    <th>申請理由</th>
-                    <th>申請日時</th>
-                    <th>詳細</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($approvedRequests as $request)
-                <tr>
-                    <td>承認済み</td>
-                    <td>{{ $request->user->name }}</td>
-                    <td>@if($request->attendance)
-                            {{ \Carbon\Carbon::parse($request->attendance->date)->format('Y/m/d') }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>{{ $request->new_remarks }}</td>
-                    <td>{{ $request->created_at ? $request->created_at->format('Y/m/d') : '-' }}</td>
+                    <td>{{ $request->created_at->format('Y/m/d') }}</td>
                     <td>
                         <a href="{{ route('admin.stamp_correction_request.approve', $request->id) }}" class="btn-detail">詳細</a>
                     </td>
@@ -83,22 +58,4 @@
         </table>
     </div>
 </div>
-
-<script>
-    function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-
-    tablinks = document.getElementsByClassName("tab-btn");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-</script>
 @endsection

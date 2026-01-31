@@ -37,19 +37,18 @@
         <tbody>
             @foreach ($attendances as $attendance)
             <tr>
-                <td class="align-left">{{ $attendance->user->name ?? '削除済みユーザー' }}</td>
+                <td class="align-left">{{ optional($attendance->user)->name ?? '削除済みユーザー' }}</td>
                 <td>{{ $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '' }}</td>
                 <td>
                     @if ($attendance->end_time)
                         {{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}
                     @else
                         @endif
+                <td>
+                    {{ $attendance->rest_sum ?? '' }}
                 </td>
                 <td>
-                    {{ $attendance->rest_sum === '00:00' ? '' : $attendance->rest_sum }}
-                </td>
-                <td>
-                    {{ $attendance->work_time === '00:00' ? '' : $attendance->work_time }}
+                    {{ $attendance->work_time ?? '' }}
                 </td>
                 <td>
                     <a href="{{ route('admin.attendance.show', ['id' => $attendance->id]) }}" class="btn-detail">詳細</a>

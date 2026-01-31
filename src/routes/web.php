@@ -22,12 +22,8 @@ use App\Http\Controllers\Admin\StampCorrectionRequestController as AdminStampCor
 
 // --- 一般ユーザー用ルーティング ---
 
-// ※ログイン(PG02)・会員登録(PG01)はFortifyが自動でルートを提供しますが、
-// 必要に応じてカスタマイズするため、Fortify設定後に確認します。
-
 // ▼ 勤怠関連
 Route::group(['prefix' => 'attendance', 'middleware' => ['verified']], function () {
-    // PG03 勤怠登録画面（打刻画面）
     Route::get('/', [AttendanceController::class, 'index'])->name('attendance.index');
 
     Route::post('/clockin', [AttendanceController::class, 'clockIn'])->name('attendance.clockIn');
@@ -46,14 +42,12 @@ Route::post('/logout', function (\Illuminate\Http\Request $request) {
     Auth::guard('web')->logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();
-    
+
     return redirect('/login');
 })->name('logout');
 
 
 // ▼ 修正申請関連（一般・管理者 共通URL）
-// ※画面定義の要件により、PG06(一般)とPG12(管理者)は同じURLを使用します。
-// コントローラー内部で権限判定を行い、表示内容を分岐させます。
 Route::group(['prefix' => 'stamp_correction_request'], function () {
 
     // PG06 & PG12 申請一覧画面
@@ -71,6 +65,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // PG07 ログイン画面（管理者）
     Route::get('/login', [AdminAuthController::class, 'login'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'loginStore'])->name('login.store');
+
+    Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
@@ -93,18 +89,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/staff/list', [AdminStaffController::class, 'index'])->name('staff.list');
 
     // ▼ 修正申請管理（管理者専用アクション）
-    Route::group(['prefix' => 'stamp_correction_request'], function () {
+        Route::group(['prefix' => 'stamp_correction_request'], function () {
 
-        Route::get('/list', [AdminStampCorrectionRequestController::class, 'index'])
-            ->name('stamp_correction_request.index');
+            Route::get('/list', [AdminStampCorrectionRequestController::class, 'index'])
+                ->name('stamp_correction_request.index');
 
-        // PG13 修正申請承認画面
-        Route::get('/approve/{attendance_correct_request_id}', [AdminStampCorrectionRequestController::class, 'approveView'])
-            ->name('stamp_correction_request.approve');
+            // PG13 修正申請承認画面
+            Route::get('/approve/{attendance_correct_request_id}', [AdminStampCorrectionRequestController::class, 'approveView'])
+                ->name('stamp_correction_request.approve');
 
-        // 承認処理（POST）
-        Route::post('/approve/{attendance_correct_request_id}', [AdminStampCorrectionRequestController::class, 'approve'])
-            ->name('stamp_correction_request.approve.action');
+            // 承認処理（POST）
+            Route::post('/approve/{attendance_correct_request_id}', [AdminStampCorrectionRequestController::class, 'approve'])
+                ->name('stamp_correction_request.approve.action');
+        });
     });
-
 });

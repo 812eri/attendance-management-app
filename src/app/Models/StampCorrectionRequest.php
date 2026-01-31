@@ -20,6 +20,13 @@ class StampCorrectionRequest extends Model
         'status',
     ];
 
+    protected $casts = [
+        'new_start_time' => 'datetime',
+        'new_end_time' => 'datetime',
+        'new_break_start' => 'datetime',
+        'new_break_end' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

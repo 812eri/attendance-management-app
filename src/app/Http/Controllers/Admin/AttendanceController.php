@@ -19,7 +19,7 @@ class AttendanceController extends Controller
         $currentDate = Carbon::parse($date);
 
         $attendances = Attendance::with('user')
-        ->where('date', $currentDate->format('Y-m-d'))
+        ->whereDate('date', $currentDate)
         ->get();
 
         $viewData = [

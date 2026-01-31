@@ -54,7 +54,7 @@
 
                         <td>{{ $req->new_remarks }}</td>
 
-                        <td>{{ $req->create_at->format('Y/m/d') }}</td>
+                        <td>{{ $req->created_at->format('Y/m/d') }}</td>
 
                         <td>
                             <a href="{{ route('attendance.show', $req->attendance->id) }}" class="btn-detail">詳細</a>
