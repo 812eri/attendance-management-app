@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StampCorrectionRequest;
+use App\Models\StampCorrectionRequestRest;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,6 @@ class StampCorrectionRequestController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
         $tab = $request->input('tab', 'pending');
 
         $query = StampCorrectionRequest::where('user_id', $user->id);
@@ -24,7 +24,7 @@ class StampCorrectionRequestController extends Controller
             $query->where('status', 'pending');
         }
 
-        $requests = $query->latest()->get();
+        $requests = $query->with(['attendance', 'stampCorrectionRequestRests'])->latest()->get();
 
         return view('stamp_correction_request.index', compact('requests', 'tab'));
     }
@@ -35,24 +35,40 @@ class StampCorrectionRequestController extends Controller
             'attendance_id' => 'required|exists:attendances,id',
             'new_start_time' => 'required',
             'new_end_time' => 'required|after:new_start_time',
-            'new_break_start' => 'required|after:new_start_time|before:new_end_time',
-            'new_break_end' => 'required|after:new_break_start|before:new_end_time',
             'new_remarks' => 'required',
+
+            'new_break_starts' => 'nullable|array',
+            'new_break_ends' => 'nullable|array',
+
+            'new_break_starts.*' => 'nullable|required_with:new_break_ends.*',
+            'new_break_ends.*' => 'nullable|required_with:new_break_starts.*|after:new_break_starts.*',
         ]);
 
         $attendance = Attendance::findOrFail($request->attendance_id);
 
         DB::transaction(function () use ($request, $attendance) {
-            StampCorrectionRequest::create([
+            $correctionRequest = StampCorrectionRequest::create([
                 'user_id' => Auth::id(),
                 'attendance_id' => $attendance->id,
                 'status' => 'pending',
                 'new_start_time' => $request->new_start_time,
                 'new_end_time' => $request->new_end_time,
-                'new_break_start' => $request->new_break_start,
-                'new_break_end' => $request->new_break_end,
                 'new_remarks' => $request->new_remarks,
             ]);
+
+            if ($request->has('new_break_starts')) {
+                foreach ($request->new_break_starts as $index => $startTime) {
+                    $endTime = $request->new_break_ends[$index] ?? null;
+
+                    if ($startTime && $endTime) {
+                        StampCorrectionRequestRest::create([
+                            'stamp_correction_request_id' => $correctionRequest->id,
+                            'new_break_start' => $startTime,
+                            'new_break_end' => $endTime,
+                        ]);
+                    }
+                }
+            }
         });
 
         return redirect()->route('stamp_correction_request.index', ['tab' => 'pending']);

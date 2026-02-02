@@ -25,7 +25,8 @@ class StampCorrectionRequestController extends Controller
 
     public function approveView($attendance_correct_request_id)
     {
-        $request = StampCorrectionRequest::with(['user', 'attendance'])->findOrFail($attendance_correct_request_id);
+        $request = StampCorrectionRequest::with(['user', 'attendance', 'stampCorrectionRequestRests'])
+        ->findOrFail($attendance_correct_request_id);
 
         $dt = \Carbon\Carbon::parse($request->attendance->date);
         $year = $dt->format('Y年');
@@ -37,7 +38,9 @@ class StampCorrectionRequestController extends Controller
     public function approve($attendance_correct_request_id)
     {
         DB::transaction(function () use ($attendance_correct_request_id) {
-            $request = StampCorrectionRequest::findOrFail($attendance_correct_request_id);
+            $request = StampCorrectionRequest::with('stampCorrectionRequestRests')
+            ->findOrFail($attendance_correct_request_id);
+
             $attendance = Attendance::findOrFail($request->attendance_id);
 
             $baseDate = \Carbon\Carbon::parse($attendance->date)->format('Y-m-d');
@@ -50,14 +53,6 @@ class StampCorrectionRequestController extends Controller
                 ? \Carbon\Carbon::parse($request->new_end_time)->format('H:i:s') 
                 : null;
 
-            $newBreakStart = $request->new_break_start 
-                ? \Carbon\Carbon::parse($request->new_break_start)->format('H:i:s') 
-                : null;
-
-            $newBreakEnd = $request->new_break_end 
-                ? \Carbon\Carbon::parse($request->new_break_end)->format('H:i:s') 
-                : null;
-
             $attendance->start_time = $newStartTime ? "{$baseDate} {$newStartTime}" : null;
             $attendance->end_time = $newEndTime ? "{$baseDate} {$newEndTime}" : null;
             $attendance->remarks = $request->new_remarks;
@@ -65,11 +60,14 @@ class StampCorrectionRequestController extends Controller
 
             $attendance->rests()->delete();
 
-            if ($newBreakStart && $newBreakEnd) {
+            foreach ($request->stampCorrectionRequestRests as $restRequest) {
+                $breakStart = \Carbon\Carbon::parse($restRequest->new_break_start)->format('H:i:s');
+                $breakEnd = \Carbon\Carbon::parse($restRequest->new_break_end)->format('H:i:s');
+
                 \App\Models\Rest::create([
                     'attendance_id' => $attendance->id,
-                    'start_time' => "{$baseDate} {$newBreakStart}",
-                    'end_time' => "{$baseDate} {$newBreakEnd}",
+                    'start_time' => "{$baseDate} {$breakStart}",
+                    'end_time' => "{$baseDate} {$breakEnd}",
                 ]);
             }
 
@@ -77,6 +75,7 @@ class StampCorrectionRequestController extends Controller
             $request->save();
         });
 
-        return redirect()->route('admin.stamp_correction_request.index')->with('message', '修正申請を承認しました');
+        return redirect()->route('admin.stamp_correction_request.index')
+        ->with('message', '修正申請を承認しました');
     }
 }

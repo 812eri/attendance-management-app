@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Attendance;
 use App\Models\Rest;
 use App\Models\StampCorrectionRequest;
+use App\Models\StampCorrectionRequestRest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 
@@ -54,15 +55,19 @@ class DatabaseSeeder extends Seeder
                     'end_time'      => $dateStr . ' 13:00:00',
                 ]);
 
-                StampCorrectionRequest::create([
+                $correctionRequest = StampCorrectionRequest::create([
                     'user_id' => $user->id,
                     'attendance_id' => $attendance->id,
                     'new_start_time' => '10:00:00',
                     'new_end_time'   => '19:00:00',
-                    'new_break_start'=> '13:00:00',
-                    'new_break_end'  => '14:00:00',
                     'new_remarks'    => '電車遅延のため修正申請',
                     'status'         => 'pending',
+                ]);
+
+                StampCorrectionRequestRest::create([
+                    'stamp_correction_request_id' => $correctionRequest->id,
+                    'new_break_start'=> '13:00:00',
+                    'new_break_end'  => '14:00:00',
                 ]);
 
                 continue;

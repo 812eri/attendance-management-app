@@ -19,8 +19,6 @@ class CreateStampCorrectionRequestsTable extends Migration
             $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
             $table->time('new_start_time');
             $table->time('new_end_time');
-            $table->time('new_break_start');
-            $table->time('new_break_end');
             $table->text('new_remarks');
             $table->string('status')->default('pending');
             $table->timestamps();

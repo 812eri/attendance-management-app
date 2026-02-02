@@ -37,44 +37,82 @@
                     <th>出勤・退勤</th>
                     <td>
                         <div class="time-input-group">
-                            <input type="time" name="start_time"
+                            <input type="time" name="new_start_time"
                                 value="{{ $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '' }}"
                                 class="form-control time-input"
                                 @if($isPending) readonly @endif>
                             <span class="tilde">〜</span>
-                            <input type="time" name="end_time"
+                            <input type="time" name="new_end_time"
                                 value="{{ $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '' }}"
                                 class="form-control time-input"
                                 @if($isPending) readonly @endif>
                         </div>
+                        @error('new_start_time')  <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('new_end_time') <span class="text-danger">{{ $message }}</span> @enderror
                     </td>
                 </tr>
 
-                @foreach($attendance->rests as $index => $rest)
+                @php
+                    if ($isPending && $correctionRequest) {
+                        $rests = $correctionRequest-≥stampCorrectionRequestRests;
+                    } else {
+                        $rests = $attendance->rests;
+                    }
+                @endphp
+
+                @foreach($rests as $index => $rest)
                     <tr>
-                        <th>休憩{{ $index > 0 ? $index + 1 : '' }}</th>
+                        <th>
+                            @if($index == 0)
+                                休憩
+                            @else
+                                休憩{{ $index + 1 }}
+                            @endif
+                        </th>
                         <td>
                             <div class="time-input-group">
-                                <input type="hidden" name="rest_ids[]" value="{{ $rest->id }}">
+                                @php
+                                    $startTime = $isPending ? $rest->new_break_start : $rest->start_time;
+                                    $endTime = $isPending ? $rest->new_break_end : $rest->end_time;
+                                @endphp
 
-                                <input type="time" name="rest_start_times[]"
-                                    value="{{ \Carbon\Carbon::parse($rest->start_time)->format('H:i') }}"
-                                    class="form-control time-input"
+                                <input type="time" name="new_break_starts[]" 
+                                    value="{{ \Carbon\Carbon::parse($rest->start_time)->format('H:i') }}" 
+                                    class="form-control time-input" 
                                     @if($isPending) readonly @endif>
                                 <span class="tilde">〜</span>
-                                <input type="time" name="rest_end_times[]"
-                                value="{{ $rest->end_time ? \Carbon\Carbon::parse($rest->end_time)->format('H:i') : '' }}"
-                                class="form-control time-input"
-                                @if($isPending) readonly @endif>
+                                <input type="time" name="new_break_ends[]" 
+                                    value="{{ \Carbon\Carbon::parse($rest->end_time)->format('H:i') }}" 
+                                    class="form-control time-input" 
+                                    @if($isPending) readonly @endif>
                             </div>
                         </td>
                     </tr>
                 @endforeach
 
+            @if(!$isPending)
+                <tr>
+                    <th>
+                        @if(count($rests) == 0)
+                            休憩
+                        @else
+                            休憩{{ count($rests) + 1 }}
+                        @endif
+                    </th>
+                    <td>
+                        <div class="time-input-group">
+                            <input type="time" name="new_break_starts[]" class="form-control time-input">
+                            <span class="tilde">〜</span>
+                            <input type="time" name="new_break_ends[]" class="form-control time-input">
+                        </div>
+                    </td>
+                </tr>
+            @endif
+
                 <tr>
                     <th>備考</th>
                     <td>
-                        <textarea name="remarks" class="form-control textarea-input"
+                        <textarea name="new_remarks" class="form-control textarea-input"
                                 @if($isPending) readonly @endif>{{ $attendance->remarks }}</textarea>
                     </td>
                 </tr>

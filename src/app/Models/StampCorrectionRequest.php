@@ -36,4 +36,9 @@ class StampCorrectionRequest extends Model
     {
         return $this->belongsTo(Attendance::class);
     }
+
+    public function stampCorrectionRequestRests()
+    {
+        return $this->hasMany(StampCorrectionRequestRest::class);
+    }
 }
