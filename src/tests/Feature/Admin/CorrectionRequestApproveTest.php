@@ -33,10 +33,14 @@ class CorrectionRequestApproveTest extends TestCase
             'attendance_id' => $attendance->id,
             'new_start_time' => '10:00:00',
             'new_end_time' => '19:00:00',
-            'new_break_start' => '13:00:00',
-            'new_break_end' => '14:00:00',
             'new_remarks' => '遅刻のため修正',
             'status' => 'pending',
+        ]);
+
+        \App\Models\StampCorrectionRequestRest::create([
+            'stamp_correction_request_id' => $request->id,
+            'new_break_start' => '13:00:00',
+            'new_break_end' => '14:00:00',
         ]);
 
         $response = $this->actingAs($admin)->get(route('admin.stamp_correction_request.approve', $request->id));
@@ -57,10 +61,14 @@ class CorrectionRequestApproveTest extends TestCase
             'attendance_id' => $attendance->id,
             'new_start_time' => '09:00:00',
             'new_end_time' => '18:00:00',
-            'new_break_start' => '12:00:00',
-            'new_break_end' => '13:00:00',
             'new_remarks' => 'テスト',
             'status' => 'pending',
+        ]);
+
+        \App\Models\StampCorrectionRequestRest::create([
+            'stamp_correction_request_id' => $request->id,
+            'new_break_start' => '12:00:00',
+            'new_break_end' => '13:00:00',
         ]);
 
         $response = $this->actingAs($generalUser)->get(route('admin.stamp_correction_request.approve', $request->id));
@@ -86,10 +94,14 @@ class CorrectionRequestApproveTest extends TestCase
             'attendance_id' => $attendance->id,
             'new_start_time' => '10:00:00',
             'new_end_time' => '19:00:00',
-            'new_break_start' => '13:00:00',
-            'new_break_end' => '14:00:00',
             'new_remarks' => '変更後の備考',
             'status' => 'pending',
+        ]);
+
+        \App\Models\StampCorrectionRequestRest::create([
+            'stamp_correction_request_id' => $request->id,
+            'new_break_start' => '13:00:00',
+            'new_break_end' => '14:00:00',
         ]);
 
         $response = $this->actingAs($admin)->post(route('admin.stamp_correction_request.approve.action', $request->id));

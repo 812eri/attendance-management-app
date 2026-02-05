@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Attendance;
 use App\Models\Rest;
+use App\Models\StampCorrectionRequest;
 
 class AttendanceController extends Controller
 {
@@ -146,15 +147,22 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        $attendance = Attendance::with(['rests', 'stampCorrectionRequests'])
+        $attendance = Attendance::with('rests')
             ->where('user_id', $user->id)
             ->findOrFail($id);
+
+        $correctionRequest = StampCorrectionRequest::with('stampCorrectionRequestRests')
+            ->where('user_id', $user->id)
+            ->where('attendance_id', $attendance->id)
+            ->where('status', 'pending')
+            ->latest()
+            ->first();
+
+        $isPending = !is_null($correctionRequest);
 
         $year = Carbon::parse($attendance->date)->format('Y');
         $month_day = Carbon::parse($attendance->date)->format('n月j日');
 
-        $isPending = $attendance->stampCorrectionRequests()->where('status', 'pending')->exists();
-
-        return view('attendance.show', compact('attendance', 'year', 'month_day', 'isPending'));
+        return view('attendance.show', compact('attendance', 'year', 'month_day', 'isPending', 'correctionRequest'));
     }
 }

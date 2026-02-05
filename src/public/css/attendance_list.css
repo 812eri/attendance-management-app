@@ -9,8 +9,6 @@
     width: 100%;
 }
 
-/* --- 以下、提示いただいたCSSを適用 --- */
-
 /* ページタイトル */
 .page-title {
     font-size: 24px;
@@ -18,7 +16,6 @@
     margin-bottom: 40px;
     text-align: left;
     border-left: 8px solid #000;
-    /* 黒い縦線 */
     padding-left: 15px;
     max-width: 900px;
     margin-left: auto;
@@ -45,7 +42,6 @@
 /* 前月・翌月リンク */
 .date-nav__link {
     color: #737373;
-    /* グレー文字 */
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
@@ -77,9 +73,7 @@
     background-color: #fff;
     max-width: 900px;
     margin: 0 auto;
-    /* ★枠線（影）を削除 */
     box-shadow: none;
-    /* 必要なら角丸もなしにする場合は0に */
     border-radius: 5px;
     padding-bottom: 20px;
 }
@@ -94,11 +88,9 @@
 .attendance-table th {
     padding: 20px 10px;
     text-align: center;
-    /* 見本に合わせてしっかりした線を入れる */
     border-bottom: 3px solid #ddd;
     font-weight: bold;
     font-size: 14px;
-    /* ★文字色を薄いグレーに変更 */
     color: #737373;
 }
 
@@ -107,7 +99,6 @@
     padding: 15px 10px;
     text-align: center;
     border-top: 2px solid #eee;
-    /* 行ごとの薄い線 */
     font-size: 14px;
     font-weight: bold;
     color: #737373;

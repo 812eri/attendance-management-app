@@ -42,15 +42,19 @@ class CorrectionRequestListTest extends TestCase
 
         $userA = User::factory()->create(['name' => 'ユーザーA']);
         $attendanceA = Attendance::create(['user_id' => $userA->id, 'date' => Carbon::today(), 'start_time' => '09:00:00']);
-        StampCorrectionRequest::create([
+        $request = StampCorrectionRequest::create([
             'user_id' => $userA->id,
             'attendance_id' => $attendanceA->id,
             'new_start_time' => '09:00:00',
             'new_end_time' => '18:00:00',
-            'new_break_start' => '12:00:00',
-            'new_break_end' => '13:00:00',
             'new_remarks' => '申請A',
             'status' => 'pending'
+        ]);
+
+        \App\Models\StampCorrectionRequestRest::create([
+            'stamp_correction_request_id' => $request->id,
+            'new_break_start' => '12:00:00',
+            'new_break_end' => '13:00:00',
         ]);
 
         $userB = User::factory()->create(['name' => 'ユーザーB']);
@@ -60,8 +64,6 @@ class CorrectionRequestListTest extends TestCase
             'attendance_id' => $attendanceB->id,
             'new_start_time' => '10:00:00',
             'new_end_time' => '19:00:00',
-            'new_break_start' => '12:00:00',
-            'new_break_end' => '13:00:00',
             'new_remarks' => '申請B',
             'status' => 'pending'
         ]);
@@ -81,15 +83,19 @@ class CorrectionRequestListTest extends TestCase
 
         $userC = User::factory()->create(['name' => 'ユーザーC']);
         $attendanceC = Attendance::create(['user_id' => $userC->id, 'date' => Carbon::today(), 'start_time' => '09:00:00']);
-        StampCorrectionRequest::create([
+        $request = StampCorrectionRequest::create([
             'user_id' => $userC->id,
             'attendance_id' => $attendanceC->id,
             'new_start_time' => '09:00:00',
             'new_end_time' => '18:00:00',
-            'new_break_start' => '12:00:00',
-            'new_break_end' => '13:00:00',
             'new_remarks' => '申請C',
             'status' => 'approved'
+        ]);
+
+        \App\Models\StampCorrectionRequestRest::create([
+            'stamp_correction_request_id' => $request->id,
+            'new_break_start' => '12:00:00',
+            'new_break_end' => '13:00:00',
         ]);
 
         $userD = User::factory()->create(['name' => 'ユーザーD']);
@@ -99,8 +105,6 @@ class CorrectionRequestListTest extends TestCase
             'attendance_id' => $attendanceD->id,
             'new_start_time' => '10:00:00',
             'new_end_time' => '19:00:00',
-            'new_break_start' => '12:00:00',
-            'new_break_end' => '13:00:00',
             'new_remarks' => '申請D',
             'status' => 'pending'
         ]);
@@ -123,10 +127,14 @@ class CorrectionRequestListTest extends TestCase
             'attendance_id' => $attendance->id,
             'new_start_time' => '09:00:00',
             'new_end_time' => '18:00:00',
-            'new_break_start' => '12:00:00',
-            'new_break_end' => '13:00:00',
             'new_remarks' => 'リンク確認用',
             'status' => 'pending'
+        ]);
+
+        \App\Models\StampCorrectionRequestRest::create([
+            'stamp_correction_request_id' => $request->id,
+            'new_break_start' => '12:00:00',
+            'new_break_end' => '13:00:00',
         ]);
 
         $response = $this->actingAs($admin)->get(route('admin.stamp_correction_request.index'));

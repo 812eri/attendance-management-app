@@ -58,8 +58,8 @@ class DetailCorrectionTest extends TestCase
             'attendance_id' => $attendance->id,
             'new_start_time' => '09:00',
             'new_end_time' => '18:00',
-            'new_break_start' => '19:00',
-            'new_break_end' => '20:00',
+            'new_break_starts' => ['19:00'],
+            'new_break_end' => ['20:00'],
             'new_remarks' => '修正テスト',
         ];
 
@@ -138,15 +138,19 @@ class DetailCorrectionTest extends TestCase
             'end_time' => '18:00:00',
         ]);
 
-        StampCorrectionRequest::create([
+        $request = StampCorrectionRequest::create([
             'user_id' => $user->id,
             'attendance_id' => $attendance->id,
             'new_start_time' => '10:00:00',
             'new_end_time' => '19:00:00',
-            'new_break_start' => '12:00:00',
-            'new_break_end' => '13:00:00',
             'new_remarks' => 'テスト申請',
             'status' => 'pending',
+        ]);
+
+        \App\Models\StampCorrectionRequestRest::create([
+            'stamp_correction_request_id' => $request->id,
+            'new_break_start' => '12:00:00',
+            'new_break_end' => '13:00:00',
         ]);
 
         $response = $this->actingAs($user)->get(route('stamp_correction_request.index'));

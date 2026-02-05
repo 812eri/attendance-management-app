@@ -37,14 +37,20 @@
                     <th>出勤・退勤</th>
                     <td>
                         <div class="time-input-group">
-                            <input type="time" name="new_start_time"
+                            <input type="text" name="new_start_time"
                                 value="{{ $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '' }}"
                                 class="form-control time-input"
+                                onfocus="this.type='time'"
+                                onblur="if(this.value==''){this.type='text'}"
                                 @if($isPending) readonly @endif>
+
                             <span class="tilde">〜</span>
-                            <input type="time" name="new_end_time"
+
+                            <input type="text" name="new_end_time"
                                 value="{{ $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '' }}"
                                 class="form-control time-input"
+                                onfocus="this.type='time'"
+                                onblur="if(this.value==''){this.type='text'}"
                                 @if($isPending) readonly @endif>
                         </div>
                         @error('new_start_time')  <span class="text-danger">{{ $message }}</span> @enderror
@@ -54,7 +60,7 @@
 
                 @php
                     if ($isPending && $correctionRequest) {
-                        $rests = $correctionRequest-≥stampCorrectionRequestRests;
+                        $rests = $correctionRequest->stampCorrectionRequestRests;
                     } else {
                         $rests = $attendance->rests;
                     }
@@ -76,16 +82,25 @@
                                     $endTime = $isPending ? $rest->new_break_end : $rest->end_time;
                                 @endphp
 
-                                <input type="time" name="new_break_starts[]" 
-                                    value="{{ \Carbon\Carbon::parse($rest->start_time)->format('H:i') }}" 
-                                    class="form-control time-input" 
+                                <input type="text" name="new_break_starts[]"
+                                    value="{{ \Carbon\Carbon::parse($startTime)->format('H:i') }}"
+                                    class="form-control time-input"
+                                    onfocus="this.type='time'"
+                                    onblur="if(this.value==''){this.type='text'}"
                                     @if($isPending) readonly @endif>
+
                                 <span class="tilde">〜</span>
-                                <input type="time" name="new_break_ends[]" 
-                                    value="{{ \Carbon\Carbon::parse($rest->end_time)->format('H:i') }}" 
-                                    class="form-control time-input" 
+
+                                <input type="text" name="new_break_ends[]"
+                                    value="{{ \Carbon\Carbon::parse($endTime)->format('H:i') }}"
+                                    class="form-control time-input"
+                                    onfocus="this.type='time'"
+                                    onblur="if(this.value==''){this.type='text'}"
                                     @if($isPending) readonly @endif>
                             </div>
+
+                            @error('new_break_starts.'.$index) <div class="tex-danger">{{ $message }}</div>@enderror
+                            @error('new_break_ends.'.$index) <div class="text-danger">{{ $message }}</div>@enderror
                         </td>
                     </tr>
                 @endforeach
@@ -101,9 +116,17 @@
                     </th>
                     <td>
                         <div class="time-input-group">
-                            <input type="time" name="new_break_starts[]" class="form-control time-input">
+                            <input type="text" name="new_break_starts[]"
+                            class="form-control time-input"
+                            onfocus="this.type='time'"
+                            onblur="if(this.value==''){this.type='text'}">
+
                             <span class="tilde">〜</span>
-                            <input type="time" name="new_break_ends[]" class="form-control time-input">
+
+                            <input type="text" name="new_break_ends[]"
+                            class="form-control time-input"
+                            onfocus="this.type='time'"
+                            onblur="if(this.value==''){this.type='text'}">
                         </div>
                     </td>
                 </tr>

@@ -31,7 +31,7 @@ class StampCorrectionRequestController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'attendance_id' => 'required|exists:attendances,id',
             'new_start_time' => 'required',
             'new_end_time' => 'required|after:new_start_time',
@@ -40,9 +40,12 @@ class StampCorrectionRequestController extends Controller
             'new_break_starts' => 'nullable|array',
             'new_break_ends' => 'nullable|array',
 
-            'new_break_starts.*' => 'nullable|required_with:new_break_ends.*',
-            'new_break_ends.*' => 'nullable|required_with:new_break_starts.*|after:new_break_starts.*',
-        ]);
+            'new_break_starts.*' => 'nullable|required_with:new_break_ends.*|after:new_start_time|before:new_end_time',
+            'new_break_ends.*' => 'nullable|required_with:new_break_starts.*|after:new_break_starts.*|before:new_end_time',
+        ];
+
+        $request->validate($rules);
+
 
         $attendance = Attendance::findOrFail($request->attendance_id);
 

@@ -16,6 +16,14 @@ return [
     ],
     'confirmed' => ':attributeが一致しません',
     'unique' => '登録済みの:attributeです',
+    'required_with' => ':attributeを入力してください。',
+    'after' => ':attributeには、:dateより後の時間を入力してください。',
+    'custom' => [
+        'new_break_ends.*' => [
+            'after' => '休憩終了時間は、休憩開始時間より後の時間を指定してください。',
+        ],
+    ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -26,5 +34,10 @@ return [
         'name' => '名前',
         'email' => 'メールアドレス',
         'password' => 'パスワード',
+        'new_start_time' => '出勤時間',
+        'new_end_time' => '退勤時間',
+        'new_remarks' => '備考',
+        'new_break_starts.*' => '休憩開始時間',
+        'new_break_ends.*' => '休憩終了時間',
     ],
 ];
