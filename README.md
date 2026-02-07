@@ -12,78 +12,86 @@ Laravelを使用した勤怠管理アプリケーションです。
 - 打刻修正リクエスト機能
 - 管理者機能（ユーザー管理・打刻修正承認など）
 
-##環境構築
+## 環境構築
 
 ### Docker ビルド
 
-    1. リポジトリをクローン
+1.  リポジトリをクローン
 
-        ```bash
-       git clone https://github.com/812eri/attendance-management-app.git
-        ```
+    ```bash
+    git clone https://github.com/812eri/attendance-management-app.git
+    ```
 
-    2. DockerDesktop　アプリを立ち上げる
+2.  DockerDesktop　アプリを立ち上げる
 
-    3. コンテナをビルド・起動
-        ```bash
-       docker-compose up -d --build
-        ```
+3.  コンテナをビルド・起動
 
-    ※ MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
+    ```bash
+    docker-compose up -d --build
+    ```
 
-    ※ MacのM1・M2チップPCをご利用の場合、
-      no matching manifest for linux/arm64/v8 in the manifest list entries のメッセージが表示されビルドができないことがあります。
-      エラーが発生する場合は、docker-compose.ymlファイルの「mysql」内に「platform」の項目を追加で記載してください。
+※ MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
 
-        ```YAML
-      mysql:
-          platform: linux/x86_64 # ←ここに追加
-          image: mysql:8.0.26
-          environment:
-        ```
+※ MacのM1・M2チップPCをご利用の場合、
+no matching manifest for linux/arm64/v8 in the manifest list entries のメッセージが表示されビルドができないことがあります。
+エラーが発生する場合は、docker-compose.ymlファイルの「mysql」内に「platform」の項目を追加で記載してください。
+
+    ```YAML
+    mysql:
+        platform: linux/x86_64 # ←ここに追加
+        image: mysql:8.0.26
+        environment:
+    ```
 
 ### Laravel 環境構築
 
-    1. PHPコンテナに入る
-        ```bash
-        docker-compose exec php bash
-        ```
+1. PHPコンテナに入る
 
-    2. 依存パッケージのインストール
-        ```bash
-        composer install
-        ```
+   ```bash
+   docker-compose exec php bash
+   ```
 
-    3. 環境変数の設定
-        .env.example をコピーして .env を作成し、以下の設定を記述してください。
-        ```bash
-        cp .env.example .env
-        ```
+2. 依存パッケージのインストール
 
-        ▼データーベース設定
-        ```ini
-        DB_CONNECTION=mysql
-        DB_HOST=mysql
-        DB_PORT=3306
-        DB_DATABASE=laravel_db
-        DB_USERNAME=larabel_user
-        DB_PASSWORD=laravel_pass
-        ```
+   ```bash
+   composer install
+   ```
 
-    4. アプリケーションキーの作成
-    ```bash
-    php artisan key:generate
-    ```
+3. 環境変数の設定
+   .env.example をコピーして .env を作成し、以下の設定を記述してください。
 
-    5. マイグレーションとシーディングの実行
-    ```bash
-    php artisan migrate:fresh --seed
-    ```
+   ```bash
+   cp .env.example .env
+   ```
 
-    6. PHPコンテナから出る
-    ```bash
-    exit
-    ```
+   ▼データーベース設定
+
+   ```ini
+   DB_CONNECTION=mysql
+   DB_HOST=mysql
+   DB_PORT=3306
+   DB_DATABASE=laravel_db
+   DB_USERNAME=larabel_user
+   DB_PASSWORD=laravel_pass
+   ```
+
+4. アプリケーションキーの作成
+
+```bash
+php artisan key:generate
+```
+
+5. マイグレーションとシーディングの実行
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+6. PHPコンテナから出る
+
+```bash
+exit
+```
 
 ## 機能確認方法
 
