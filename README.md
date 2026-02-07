@@ -36,12 +36,12 @@ Laravelを使用した勤怠管理アプリケーションです。
 no matching manifest for linux/arm64/v8 in the manifest list entries のメッセージが表示されビルドができないことがあります。
 エラーが発生する場合は、docker-compose.ymlファイルの「mysql」内に「platform」の項目を追加で記載してください。
 
-    ```YAML
-    mysql:
-        platform: linux/x86_64 # ←ここに追加
-        image: mysql:8.0.26
-        environment:
-    ```
+```YAML
+mysql:
+    platform: linux/x86_64 # ←ここに追加
+    image: mysql:8.0.26
+    environment:
+```
 
 ### Laravel 環境構築
 
@@ -122,7 +122,7 @@ exit
 | name              | varchar(255) |     |     |    ○     |     |
 | email             | varchar(255) |     |  ○  |    ○     |     |
 | password          | varchar(255) |     |     |    ○     |     |
-| role_id           | int          |     |     |    ○     |     |
+| role_id           | tinyint      |     |     |    ○     |     |
 | email_verified_at | timestamp    |     |     |          |     |
 | remember_token    | varchar(100) |     |     |          |     |
 | created_at        | timestamp    |     |     |          |     |
@@ -175,11 +175,11 @@ exit
 勤務中の休憩時間を管理するテーブルです。（1つの勤怠に対して複数の休憩が可能）
 
 | カラム名      | 型        | PK  | UK  | Not Null | FK              |
-| :------------ | :-------- | :-: | :-: | :------: | :-------------- | --- |
+| :------------ | :-------- | :-: | :-: | :------: | :-------------- |
 | id            | bigint    |  ○  |     |    ○     |                 |
 | attendance_id | bigint    |     |     |    ○     | attendances(id) |
 | start_time    | time      |     |     |    ○     |                 |
-| end_time      | time      |     |     |          |                 |     |
+| end_time      | time      |     |     |          |                 |
 | created_at    | timestamp |     |     |          |                 |
 | updated_at    | timestamp |     |     |          |                 |
 
