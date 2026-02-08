@@ -97,6 +97,11 @@ exit
 
 環境構築（シーディング）完了後、以下の初期アカウントでログインして機能をテストできます。
 
+## URL
+
+- ログイン画面（一般ユーザー）: http://localhost/login
+- ログイン画面（管理者）: http://localhost/admin/login
+
 ### 管理者アカウント（Admin）
 
 全ての管理者機能（ユーザー一覧、打刻修正承認など）を確認できます。
@@ -108,6 +113,66 @@ exit
 打刻機能、修正申請機能を確認できます。
 ・メールアドレス：user@example.com
 ・パスワード：password
+
+## メール確認
+
+開発環境では実際のメールアドレスには送信されず、**MailHog**（メール確認ツール）でキャッチされます。
+ユーザー登録時の認証メールなどは、以下の手順で確認してください。
+
+### 1. 設定確認（.env）
+
+`.env`ファイルのメール設定が以下のようになっているか確認してください。
+※ Docker環境の場合、`MAIL_HOST`は`docker-compose.yml`のサービス名（通常`mailhog`）を指定します。
+※ `MAIL_FROM_NAME` に `${APP_NAME}` を設定すると、アプリ名が差出人として表示されます。
+
+```dotenv
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+### 2. メールの閲覧
+
+ブラウザで以下のURLにアクセスすると、送信されたメールを確認できます。
+・MailHog管理画面: http://localhost:8025/
+
+## テスト（PHPUnit）
+
+PHPUnitを使用した自動テストの実行手順です。
+
+### 1. テスト環境について
+
+Laravelのデフォルト設定 (phpunit.xml) に従い、テスト実行時は自動的にテスト用データベースが使用されます。
+※ .env の内容は変更せず、そのまま実行可能です。
+
+### 2. テストの実行
+
+Dockerコンテナ内に入り、以下のコマンドを実行してください。
+
+### 2-1. コンテナに入る
+
+```bash
+docker compose exec php bash
+```
+
+### 2-2. テストを実行する
+
+```bash
+#全てのテストを実行
+php artisan test
+```
+
+### （オプション）特定のファイルのみテストする場合
+
+```bash
+#例：ログイン機能のテストのみ実行
+php artisan test tests/Feature/Auth/LoginTest.php
+```
 
 ## テーブル設計
 
