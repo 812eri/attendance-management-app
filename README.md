@@ -2,7 +2,7 @@
 
 ## 概要
 
-Laravelを使用した勤怠管理アプリケーションです。
+Laravelを使用した勤怠管理アプリケーションです。<br>
 勤怠・退勤の打刻や、打刻修正リクエスト機能などを備えています。
 
 ## 機能一覧
@@ -32,8 +32,7 @@ Laravelを使用した勤怠管理アプリケーションです。
 
 ※ MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
 
-※ MacのM1・M2チップPCをご利用の場合、
-no matching manifest for linux/arm64/v8 in the manifest list entries のメッセージが表示されビルドができないことがあります。
+※ MacのM1・M2チップPCをご利用の場合、no matching manifest for linux/arm64/v8 in the manifest list entries のメッセージが表示されビルドができないことがあります。<br>
 エラーが発生する場合は、docker-compose.ymlファイルの「mysql」内に「platform」の項目を追加で記載してください。
 
 ```YAML
@@ -104,25 +103,39 @@ exit
 
 ### 管理者アカウント（Admin）
 
-全ての管理者機能（ユーザー一覧、打刻修正承認など）を確認できます。
-・メールアドレス：admin@example.com
+全ての管理者機能（ユーザー一覧、打刻修正承認など）を確認できます。<br>
+・メールアドレス：admin@example.com<br>
 ・パスワード：password
 
 ### 一般ユーザーアカウント(General)
 
-打刻機能、修正申請機能を確認できます。
-・メールアドレス：user@example.com
+打刻機能、修正申請機能を確認できます。<br>
+・メールアドレス：user@example.com<br>
 ・パスワード：password
 
-## メール確認
+## メール認証（MailHog）
 
-開発環境では実際のメールアドレスには送信されず、**MailHog**（メール確認ツール）でキャッチされます。
+開発環境では実際のメールアドレスには送信されず、**MailHog**（メール確認ツール）でキャッチされます。<br>
 ユーザー登録時の認証メールなどは、以下の手順で確認してください。
 
-### 1. 設定確認（.env）
+### 1-1. 環境構築（インストール）
 
-`.env`ファイルのメール設定が以下のようになっているか確認してください。
-※ Docker環境の場合、`MAIL_HOST`は`docker-compose.yml`のサービス名（通常`mailhog`）を指定します。
+本アプリケーションでは、開発用のメールサーバーとして **MailHog** をDockerコンテナで構築しています。
+個別のインストールは不要ですが、`docker-compose.yml` に以下の設定が含まれていることを前提としています。
+
+```yaml
+# docker-compose.yml の設定例
+mailhog:
+  image: mailhog/mailhog
+  ports:
+    - "1025:1025" # SMTPサーバー (Laravelからの送信先)
+    - "8025:8025" # Web管理画面 (ブラウザでの確認用)
+```
+
+### 1-2. 設定確認（.env）
+
+`.env`ファイルのメール設定が以下のようになっているか確認してください。<br>
+※ Docker環境の場合、`MAIL_HOST`は`docker-compose.yml`のサービス名（通常`mailhog`）を指定します。<br>
 ※ `MAIL_FROM_NAME` に `${APP_NAME}` を設定すると、アプリ名が差出人として表示されます。
 
 ```dotenv
@@ -138,7 +151,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ### 2. メールの閲覧
 
-ブラウザで以下のURLにアクセスすると、送信されたメールを確認できます。
+ブラウザで以下のURLにアクセスすると、送信されたメールを確認できます。<br>
 ・MailHog管理画面: http://localhost:8025/
 
 ## テスト（PHPUnit）
@@ -147,27 +160,27 @@ PHPUnitを使用した自動テストの実行手順です。
 
 ### 1. テスト環境について
 
-Laravelのデフォルト設定 (phpunit.xml) に従い、テスト実行時は自動的にテスト用データベースが使用されます。
+Laravelのデフォルト設定 (phpunit.xml) に従い、テスト実行時は自動的にテスト用データベースが使用されます。<br>
 ※ .env の内容は変更せず、そのまま実行可能です。
 
 ### 2. テストの実行
 
 Dockerコンテナ内に入り、以下のコマンドを実行してください。
 
-### 2-1. コンテナに入る
+#### 2-1. コンテナに入る
 
 ```bash
 docker compose exec php bash
 ```
 
-### 2-2. テストを実行する
+#### 2-2. テストを実行する
 
 ```bash
 #全てのテストを実行
 php artisan test
 ```
 
-### （オプション）特定のファイルのみテストする場合
+#### （オプション）特定のファイルのみテストする場合
 
 ```bash
 #例：ログイン機能のテストのみ実行
