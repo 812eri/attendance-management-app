@@ -22,13 +22,13 @@ use App\Http\Controllers\Admin\StampCorrectionRequestController as AdminStampCor
 */
 
 // --- 一般ユーザー用ルーティング ---
-
+    // ▼ 認証関連
 Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 
-// ▼ 勤怠関連
+    // ▼ 勤怠関連
 Route::group(['prefix' => 'attendance', 'middleware' => ['verified']], function () {
     Route::get('/', [AttendanceController::class, 'index'])->name('attendance.index');
 

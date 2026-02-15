@@ -10,7 +10,6 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    //管理者ログインの表示
     public function login()
     {
         return view('admin.auth.login');

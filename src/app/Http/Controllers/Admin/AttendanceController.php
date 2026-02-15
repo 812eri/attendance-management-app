@@ -200,11 +200,11 @@ class AttendanceController extends Controller
                 }
 
                 $csvRow = [
-                    $date->format('Y/m/d'), // 日付
-                    $attendance && $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '', // 出勤
-                    $attendance && $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '', // 退勤
-                    $restSum > 0 ? gmdate('H:i', $restSum * 60) : '', // 休憩
-                    $workTime > 0 ? gmdate('H:i', $workTime * 60) : '', // 合計
+                    $date->format('Y/m/d'),
+                    $attendance && $attendance->start_time ? Carbon::parse($attendance->start_time)->format('H:i') : '',
+                    $attendance && $attendance->end_time ? Carbon::parse($attendance->end_time)->format('H:i') : '',
+                    $restSum > 0 ? gmdate('H:i', $restSum * 60) : '',
+                    $workTime > 0 ? gmdate('H:i', $workTime * 60) : '',
                 ];
 
                 fputcsv($stream, $csvRow);

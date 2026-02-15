@@ -32,11 +32,9 @@
     margin-bottom: 30px;
     border-radius: 5px;
     max-width: 900px;
-    /* 幅を揃える */
     margin-left: auto;
     margin-right: auto;
     box-sizing: border-box;
-    /* 枠線を幅に含める */
 }
 
 /* 前月・翌月リンク */
