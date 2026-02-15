@@ -23,7 +23,7 @@
                 <ul>
                     <li><a href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
                     <li><a href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
-                    <li><a href="{{ route('admin.stamp_correction_request.index') }}">申請一覧</a></li>
+                    <li><a href="{{ route('stamp_correction_request.index') }}">申請一覧</a></li>
                     <li>
                         <form action="{{ route('admin.logout') }}" method="post">
                             @csrf

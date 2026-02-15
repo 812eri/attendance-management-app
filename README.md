@@ -113,6 +113,18 @@ exit
 ・メールアドレス：user@example.com<br>
 ・パスワード：password
 
+### その他検証用アカウント（複数ユーザー確認用）
+
+ユーザー一覧やページネーションの動作確認用に、以下のメールアドレスも使用可能です。<br>
+※パスワードが異なりますのでご注意ください。
+
+- **メールアドレス例**:
+  - `yamada@example.com`
+  - `nishi@example.com`
+  - `masuda@example.com`
+  - その他: 'yamamoto`, `akita`, `nakanishi`（@example.com）
+- **パスワード**: `password123`
+
 ## メール認証（MailHog）
 
 開発環境では実際のメールアドレスには送信されず、**MailHog**（メール確認ツール）でキャッチされます。<br>
@@ -286,5 +298,7 @@ php artisan test tests/Feature/Auth/LoginTest.php
 - MySQL 8.0
 - Docker/Docker Compose
 - MailHog（メールサーバー等の仮想環境）
+
+## ER図
 
 ![ER図](src/attendance-management-app.drawio.svg)

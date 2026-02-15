@@ -130,11 +130,6 @@
     /* 下線を消すか、残すかはお好みで */
 }
 
-/* =========================================
-   勤怠詳細画面（共通レイアウト用）
-   ※一般ユーザー画面でも使用予定
-   ========================================= */
-
 /* 白い背景のフォームエリア */
 .detail-form-wrapper {
     background-color: #fff;
@@ -142,9 +137,6 @@
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    /* 中央寄せ */
-    /* 必要に応じて角丸や影を追加 */
-    /* border-radius: 5px; */
 }
 
 /* フォームの各行（横並びにする） */
@@ -252,6 +244,11 @@
     font-size: 18px;
 }
 
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
 /* 備考欄（テキストエリア） */
 .input-textarea {
     width: 100%;
@@ -273,17 +270,15 @@
     margin-top: 30px;
     text-align: right;
     padding-right: 60px;
-    /* wrapperのpaddingと合わせる */
     box-sizing: border-box;
 }
 
 .btn-submit {
     background-color: #000;
     color: #fff;
-    padding: 10px 40px;
-    /* 横幅広め */
+    padding: 10px 50px;
     border: none;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;

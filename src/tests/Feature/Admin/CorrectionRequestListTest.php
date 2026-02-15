@@ -21,19 +21,10 @@ class CorrectionRequestListTest extends TestCase
     {
         $admin = User::factory()->create(['role_id' => 2]);
 
-        $response = $this->actingAs($admin)->get(route('admin.stamp_correction_request.index'));
+        $response = $this->actingAs($admin)->get(route('stamp_correction_request.index'));
 
         $response->assertStatus(200);
         $response->assertSee('申請一覧');
-    }
-
-    public function test_general_user_cannot_access_admin_correction_request_list()
-    {
-        $user = User::factory()->create(['role_id' => 1]);
-
-        $response = $this->actingAs($user)->get(route('admin.stamp_correction_request.index'));
-
-        $response->assertStatus(403);
     }
 
     public function test_shows_all_pending_requests()
@@ -68,7 +59,7 @@ class CorrectionRequestListTest extends TestCase
             'status' => 'pending'
         ]);
 
-        $response = $this->actingAs($admin)->get(route('admin.stamp_correction_request.index', ['tab' => 'pending']));
+        $response = $this->actingAs($admin)->get(route('stamp_correction_request.index', ['tab' => 'pending']));
 
         $response->assertStatus(200);
         $response->assertSee('ユーザーA');
@@ -109,7 +100,7 @@ class CorrectionRequestListTest extends TestCase
             'status' => 'pending'
         ]);
 
-        $response = $this->actingAs($admin)->get(route('admin.stamp_correction_request.index', ['tab' => 'approved']));
+        $response = $this->actingAs($admin)->get(route('stamp_correction_request.index', ['tab' => 'approved']));
 
         $response->assertStatus(200);
         $response->assertSee('ユーザーC');
@@ -118,6 +109,8 @@ class CorrectionRequestListTest extends TestCase
 
     public function test_detail_link_transitions_to_approve_screen()
     {
+        $this->withoutExceptionHandling();
+
         $admin = User::factory()->create(['role_id' => 2]);
         $user = User::factory()->create();
         $attendance = Attendance::create(['user_id' => $user->id, 'date' => Carbon::today(), 'start_time' => '09:00:00']);
@@ -137,7 +130,7 @@ class CorrectionRequestListTest extends TestCase
             'new_break_end' => '13:00:00',
         ]);
 
-        $response = $this->actingAs($admin)->get(route('admin.stamp_correction_request.index'));
+        $response = $this->actingAs($admin)->get(route('stamp_correction_request.index'));
 
         $response->assertSee(route('admin.stamp_correction_request.approve', $request->id));
     }

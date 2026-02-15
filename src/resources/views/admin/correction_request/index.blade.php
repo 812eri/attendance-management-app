@@ -11,11 +11,11 @@
     <h1 class="page-title">申請一覧</h1>
 
     <div class="tab-menu">
-        <a href="{{ route('admin.stamp_correction_request.index', ['tab' => 'pending']) }}" 
+        <a href="{{ route('stamp_correction_request.index', ['tab' => 'pending']) }}" 
            class="tab-btn {{ $status === 'pending' ? 'active' : '' }}">
             承認待ち
         </a>
-        <a href="{{ route('admin.stamp_correction_request.index', ['tab' => 'approved']) }}" 
+        <a href="{{ route('stamp_correction_request.index', ['tab' => 'approved']) }}" 
            class="tab-btn {{ $status === 'approved' ? 'active' : '' }}">
             承認済み
         </a>

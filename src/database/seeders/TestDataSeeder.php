@@ -40,7 +40,7 @@ class TestDataSeeder extends Seeder
 
             for ($i = 0; $i < 30; $i++) {
                 $targetDate = Carbon::today()->subDays($i);
-                
+
                 if (rand(1, 100) <= 30) {
                     continue;
                 }

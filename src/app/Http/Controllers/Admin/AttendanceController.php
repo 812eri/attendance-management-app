@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\Rest;
+use App\Models\StampCorrectionRequest;
+use App\Models\StampCorrectionRequestRest;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Requests\Admin\AttendanceUpdateRequest;
 
@@ -35,48 +38,56 @@ class AttendanceController extends Controller
 
     public function show($id)
     {
-        $attendance = Attendance::with(['user', 'rests', 'stampCorrectionRequests'])->findOrFail($id);
+        $attendance = Attendance::with(['rests', 'user'])->findOrFail($id);
+
+        $correctionRequest = StampCorrectionRequest::with('stampCorrectionRequestRests')
+            ->where('attendance_id', $attendance->id)
+            ->where('status', 'pending')
+            ->first();
+
+        $isPending = !is_null($correctionRequest);
 
         $dt = Carbon::parse($attendance->date);
         $year = $dt->format('Y年');
         $date = $dt->format('n月j日');
 
-        $isPending = $attendance->isPending();
-
-        return view('admin.attendance.show', compact('attendance', 'year', 'date','isPending'));
-    }
+        return view('admin.attendance.show', compact('attendance', 'correctionRequest', 'isPending', 'year', 'date'));    }
 
     public function update(AttendanceUpdateRequest $request, $id)
     {
         $attendance = Attendance::findOrFail($id);
 
-        $baseDate = $attendance->date;
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $attendance) {
+            $correctionRequest = \App\Models\StampCorrectionRequest::create([
+                'user_id' => $attendance->user_id,
+                'attendance_id' => $attendance->id,
+                'new_start_time' => $request->start_time,
+                'new_end_time' => $request->end_time,
+                'new_remarks' => $request->remarks,
+                'status' => 'pending',
+            ]);
 
-        $attendance->start_time = Carbon::parse("$baseDate {$request->start_time}");
-        $attendance->end_time = Carbon::parse("$baseDate {$request->end_time}");
-        $attendance->remarks = $request->remarks;
-        $attendance->save();
-
-        if ($request->has('rests')) {
-            foreach ($request->rests as $restId => $restData) {
-                $rest = Rest::find($restId);
-                if ($rest) {
-                    $rest->start_time = Carbon::parse("$baseDate {$restData['start_time']}");
-                    $rest->end_time = Carbon::parse("$baseDate {$restData['end_time']}");
-                    $rest->save();
+            if ($request->has('rests')) {
+                foreach ($request->rests as $restData) {
+                    \App\Models\StampCorrectionRequestRest::create([
+                        'stamp_correction_request_id' => $correctionRequest->id,
+                        'new_break_start' => $restData['start_time'],
+                        'new_break_end' => $restData['end_time'],
+                    ]);
                 }
             }
-        }
 
-        if ($request->filled('new_rest.start_time') && $request->filled('new_rest.end_time')) {
-            Rest::create([
-                'attendance_id' => $attendance->id,
-                'start_time' => Carbon::parse("$baseDate {$request->new_rest['start_time']}}"),
-                'end_time' => Carbon::parse("$baseDate {$request->new_rest['end_time']}}"),
-            ]);
-        }
+            if ($request->filled('new_rest.start_time') && $request->filled('new_rest.end_time')) {
+                \App\Models\StampCorrectionRequestRest::create([
+                    'stamp_correction_request_id' => $correctionRequest->id,
+                    'new_break_start' => $request->new_rest['start_time'],
+                    'new_break_end' => $request->new_rest['end_time'],
+                ]);
+            }
+        });
 
-        return redirect()->route('admin.attendance.show', $id)->with('message', '勤怠情報を修正しました');
+        return redirect()->route('admin.attendance.show', $id)
+            ->with('message', '修正申請を作成しました。承認待ちとなります。');
     }
 
     public function staffList($id, Request $request)

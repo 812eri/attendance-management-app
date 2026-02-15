@@ -76,10 +76,11 @@ class DetailTest extends TestCase
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'start_time' => '10:00:00',
-            'remarks' => '管理者による修正',
+        $this->assertDatabaseHas('stamp_correction_requests', [
+            'attendance_id' => $attendance->id,
+            'new_start_time' => '10:00:00',
+            'new_remarks' => '管理者による修正',
+            'status' => 'pending',
         ]);
     }
 

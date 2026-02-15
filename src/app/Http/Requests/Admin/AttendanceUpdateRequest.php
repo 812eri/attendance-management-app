@@ -58,7 +58,6 @@ class AttendanceUpdateRequest extends FormRequest
 
             if ($workStart && $workEnd && $workStart->gt($workEnd)) {
                 $validator->errors()->add('start_time', '出勤時間もしくは退勤時間が不適切な値です');
-                //$validator->errors()->add('end_time', '出勤時間もしくは退勤時間が不適切な値です');
             }
 
             $checkRest = function($restStartStr, $restEndStr, $indexKey) use ($validator, $workStart, $workEnd, $parseTime) {

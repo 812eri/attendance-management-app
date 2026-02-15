@@ -61,21 +61,22 @@ class StampCorrectionRequestController extends Controller
             $attendance->rests()->delete();
 
             foreach ($request->stampCorrectionRequestRests as $restRequest) {
-                $breakStart = \Carbon\Carbon::parse($restRequest->new_break_start)->format('H:i:s');
-                $breakEnd = \Carbon\Carbon::parse($restRequest->new_break_end)->format('H:i:s');
+                if ($restRequest->new_break_start && $restRequest->new_break_end) {
+                    $breakStart = \Carbon\Carbon::parse($restRequest->new_break_start)->format('H:i:s');
+                    $breakEnd = \Carbon\Carbon::parse($restRequest->new_break_end)->format('H:i:s');
 
-                \App\Models\Rest::create([
+                Rest::create([
                     'attendance_id' => $attendance->id,
                     'start_time' => "{$baseDate} {$breakStart}",
                     'end_time' => "{$baseDate} {$breakEnd}",
                 ]);
             }
-
+            }
             $request->status = 'approved';
             $request->save();
         });
 
-        return redirect()->route('admin.stamp_correction_request.index')
+        return redirect()->route('stamp_correction_request.index')
         ->with('message', '修正申請を承認しました');
     }
 }

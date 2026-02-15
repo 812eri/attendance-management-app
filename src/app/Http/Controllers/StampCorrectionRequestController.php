@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\StampCorrectionRequest;
 use App\Models\StampCorrectionRequestRest;
 use App\Models\Attendance;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class StampCorrectionRequestController extends Controller
@@ -49,31 +50,33 @@ class StampCorrectionRequestController extends Controller
 
         $attendance = Attendance::findOrFail($request->attendance_id);
 
-        DB::transaction(function () use ($request, $attendance) {
-            $correctionRequest = StampCorrectionRequest::create([
-                'user_id' => Auth::id(),
-                'attendance_id' => $attendance->id,
-                'status' => 'pending',
-                'new_start_time' => $request->new_start_time,
-                'new_end_time' => $request->new_end_time,
-                'new_remarks' => $request->new_remarks,
-            ]);
+        $attendanceDate = Carbon::parse($attendance->start_time)->format('Y-m-d');
 
-            if ($request->has('new_break_starts')) {
-                foreach ($request->new_break_starts as $index => $startTime) {
-                    $endTime = $request->new_break_ends[$index] ?? null;
+    DB::transaction(function () use ($request, $attendance, $attendanceDate) {
+        $correctionRequest = StampCorrectionRequest::create([
+            'user_id' => Auth::id(),
+            'attendance_id' => $attendance->id,
+            'status' => 'pending',
+            'new_start_time' => $attendanceDate . ' ' . $request->new_start_time,
+            'new_end_time'   => $attendanceDate . ' ' . $request->new_end_time,
+            'new_remarks'    => $request->new_remarks,
+        ]);
 
-                    if ($startTime && $endTime) {
-                        StampCorrectionRequestRest::create([
-                            'stamp_correction_request_id' => $correctionRequest->id,
-                            'new_break_start' => $startTime,
-                            'new_break_end' => $endTime,
-                        ]);
-                    }
+        if ($request->has('new_break_starts')) {
+            foreach ($request->new_break_starts as $index => $startTime) {
+                $endTime = $request->new_break_ends[$index] ?? null;
+
+                if ($startTime && $endTime) {
+                    StampCorrectionRequestRest::create([
+                        'stamp_correction_request_id' => $correctionRequest->id,
+                        'new_break_start' => $attendanceDate . ' ' . $startTime,
+                        'new_break_end'   => $attendanceDate . ' ' . $endTime,
+                    ]);
                 }
             }
-        });
+        }
+    });
 
-        return redirect()->route('stamp_correction_request.index', ['tab' => 'pending']);
-    }
+    return redirect()->route('attendance.show', ['id' => $request->attendance_id]);
+}
 }
