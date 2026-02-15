@@ -76,6 +76,8 @@ class RegistrationTest extends TestCase
 
     public function test_users_can_register()
     {
+        $this->withoutExceptionHandling();
+
         $userData = [
             'name' => 'Test User',
             'email' => 'test@example.com',

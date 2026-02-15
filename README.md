@@ -122,7 +122,7 @@ exit
   - `yamada@example.com`
   - `nishi@example.com`
   - `masuda@example.com`
-  - その他: 'yamamoto`, `akita`, `nakanishi`（@example.com）
+  - その他: `yamamoto`, `akita`, `nakanishi`（@example.com）
 - **パスワード**: `password123`
 
 ## メール認証（MailHog）

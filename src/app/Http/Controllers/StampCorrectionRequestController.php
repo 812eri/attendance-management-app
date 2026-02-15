@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StampCorrectionRequest;
 use App\Models\StampCorrectionRequestRest;
+use App\Http\Requests\StoreStampCorrectionRequest;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -30,23 +31,9 @@ class StampCorrectionRequestController extends Controller
         return view('stamp_correction_request.index', compact('requests', 'tab'));
     }
 
-    public function store(Request $request)
+    public function store(StoreStampCorrectionRequest $request)
     {
-        $rules = [
-            'attendance_id' => 'required|exists:attendances,id',
-            'new_start_time' => 'required',
-            'new_end_time' => 'required|after:new_start_time',
-            'new_remarks' => 'required',
-
-            'new_break_starts' => 'nullable|array',
-            'new_break_ends' => 'nullable|array',
-
-            'new_break_starts.*' => 'nullable|required_with:new_break_ends.*|after:new_start_time|before:new_end_time',
-            'new_break_ends.*' => 'nullable|required_with:new_break_starts.*|after:new_break_starts.*|before:new_end_time',
-        ];
-
-        $request->validate($rules);
-
+        $validated = $request->validated();
 
         $attendance = Attendance::findOrFail($request->attendance_id);
 

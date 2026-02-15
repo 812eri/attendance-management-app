@@ -1,14 +1,11 @@
 
-/* --- 勤怠一覧画面固有 --- */
 .page-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 40px;
     text-align: left;
-    /* 左寄せに変更 */
     border-left: 8px solid #000;
     padding-left: 15px;
-    /* 線と文字の間 */
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
@@ -23,7 +20,6 @@
     padding: 15px 40px;
     margin-bottom: 30px;
     border-radius: 5px;
-    /* 必要なければ0に */
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -32,7 +28,6 @@
 /* 前日・翌日リンク */
 .date-nav__link {
     color: #737373;
-    /* グレー文字 */
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
@@ -48,8 +43,6 @@
     margin-left: 20px;
 }
 
-/* 必要に応じて調整 */
-
 /* カレンダー入力フォーム周り */
 .date-nav__form {
     display: inline-block;
@@ -59,7 +52,6 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    /* クリックできる感 */
     position: relative;
 }
 
@@ -71,7 +63,6 @@
     width: 100%;
     height: 100%;
     opacity: 0;
-    /* 完全透明にして見えなくする */
     cursor: pointer;
 }
 
@@ -123,11 +114,9 @@
 /* 詳細ボタンだけ黒文字にする */
 .btn-detail {
     color: #000 !important;
-    /* グレー設定を上書き */
     text-decoration: none;
     font-weight: bold;
     border-bottom: none;
-    /* 下線を消すか、残すかはお好みで */
 }
 
 /* 白い背景のフォームエリア */
@@ -143,13 +132,9 @@
 .form-group {
     display: flex;
     align-items: center;
-    /* 垂直方向中央 */
     padding-bottom: 25px;
-    /* 行の下の余白 */
     margin-bottom: 25px;
-    /* 次の行との間隔 */
     border-bottom: 3px solid #e0e0e0;
-    /* 薄い下線 */
 }
 
 /* ▼▼ 追加: 下線を消すためのクラス ▼▼ */
@@ -172,7 +157,6 @@
 /* 左側のラベル（名前、日付など） */
 .form-label {
     width: 200px;
-    /* ラベル幅固定 */
     font-weight: bold;
     font-size: 16px;
     color: #737373;
@@ -217,11 +201,8 @@
 .input-time,
 .input-textarea {
     font-family: inherit;
-    /* 親要素（bodyなど）のフォントを引き継ぐ */
     font-weight: bold;
-    /* 文字の太さを合わせる */
     color: #000;
-    /* 文字色を黒に */
 }
 
 /* 時間入力欄 */
@@ -231,7 +212,6 @@
     border-radius: 5px;
     background-color: #fff;
     width: 120px;
-    /* 幅を固定 */
     text-align: center;
     font-size: 16px;
     font-weight: bold;
@@ -258,7 +238,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     border-radius: 5px;
     background-color: #fff;
     resize: none;
-    /* サイズ変更不可 */
     font-size: 16px;
 }
 
@@ -328,9 +307,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 /* --- タブコンテンツ --- */
 .tab-content {
     display: none;
-    /* 初期状態は非表示（JSで制御） */
     animation: fadeEffect 0.5s;
-    /* ふわっと表示 */
 }
 
 /* 初期表示用 */
@@ -361,21 +338,16 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     text-align: center;
     font-size: 16px;
     font-weight: bold;
-    /* 必要なら背景色などをつけて入力欄っぽく見せることも可能ですが、今回はテキストのみ */
     padding: 8px 10px;
 }
 
 /* 承認済みボタン（グレー） */
 .btn-gray {
     background-color: #5d5d5d !important;
-    /* 暗いグレー */
     cursor: default;
-    /* クリックできないカーソル */
     opacity: 1;
-    /* 透明度は下げない */
 }
 
 .btn-gray:hover {
     opacity: 1;
-    /* ホバーしても変化させない */
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Admin\LoginRequest;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -15,25 +16,24 @@ class AuthController extends Controller
         return view('admin.auth.login');
     }
 
-    public function loginstore(Request $request)
+    public function loginstore(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required' ,'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->validated();
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
             if (Auth::user()->isAdmin()) {
                 return redirect()->route('admin.attendance.list');
             }
+
             Auth::logout();
             return back()->withErrors([
                 'email' => '管理者権限がありません。',
             ]);
         }
 
-        return back()->witherrors([
+        return back()->withErrors([
             'email' => 'ログイン情報が登録されていません。',
         ])->onlyInput('email');
     }
